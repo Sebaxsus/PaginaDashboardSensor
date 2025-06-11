@@ -1,0 +1,94 @@
+@import "tailwindcss";
+
+:root {
+    --data-color: light-dark(#0d611b, #1ac228);
+    --popUp-bg-color: #580000;
+    --popUp-border-color: #9d1616;
+}
+
+.popUpContainer {
+    --animation-type: fadeIn;
+    --animation-delay: 800ms;
+
+
+    margin: 10px;
+    padding: 5px 15px;
+    width: 220px;
+    height: 120px;
+    position: absolute;
+    right: 0;
+    top: 3rem;
+    backdrop-filter: blur(20px);
+    border: var(--popUp-border-color) solid 2px;
+    border-radius: 10px;
+
+    background: radial-gradient(125% 125% at 50% 10%, #000 40%, var(--popUp-bg-color)  85%);
+    animation: var(--animation-type) 800ms ease-in-out normal;
+    overflow: hidden;
+}
+
+.popUpContainer > header {
+    display: flex;
+    justify-content: space-between;
+    font-weight: 600;
+    color: var(--popUp-border-color);
+    opacity: 1.1;
+}
+
+.popUpContainer > header > svg {
+    padding: 5px;
+    cursor: pointer;
+}
+
+.popUpContainer > svg {
+    position: absolute;
+    bottom: 2%;
+    right: 40%;
+}
+
+.popUpContainer > p {
+    font-size: small;
+    margin-bottom: 2rem;
+}
+
+.fade-in {
+  animation: fadeIn 800ms ease-in-out normal;
+  color: var(--data-color);
+  background-color: light-dark(#f5f5dc9a, #4a5349);
+}
+
+@keyframes fadeIn {
+    from {
+        width: 0px;
+        opacity: 0;
+    }
+    to {
+        width: 100%;
+        opacity: 1;
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        width: 220px;
+        opacity: 1;
+    }
+    to {
+        width: 0px;
+        opacity: 0;
+        
+    }
+}
+
+@keyframes ResaltarItem {
+    0% {
+        transform: scale(1);
+        background-color: light-dark(#f5f5dc, #000000);
+    } 50% {
+        transform: scale(1.1);
+        background-color: light-dark(#f5f5dc9a, #00000080);
+    } 100% {
+        transform: scale(1);
+        background-color: light-dark(#f5f5dc, #000000);
+    }
+}

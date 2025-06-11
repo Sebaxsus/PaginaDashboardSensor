@@ -1,0 +1,25 @@
+---
+// Seccion JS y Imports
+interface Props {
+    styling?: string;
+}
+
+const { styling } = Astro.props
+---
+
+<section class={`Page-Section ${styling}`}>
+    <slot />
+</section>
+
+<style>
+    .Page-Section {
+        border-radius: .5rem;
+        background-color: #2b2b2b;
+
+        padding: 2px;
+
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+</style>

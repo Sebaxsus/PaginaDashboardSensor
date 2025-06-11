@@ -1,0 +1,71 @@
+---
+import Welcome from '../components/Welcome.astro';
+import Layout from '../layouts/Layout.astro';
+import '../styles/global.css';
+import Section from '../components/Section.astro';
+// import WebSocketDashboard from '../components/WebSocketDashboard.astro'
+import DashboardClient from '../components/WebSocketDashboardReact';
+
+// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
+// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+// const socket = new WebSocket(new URL("ws://127.0.0.1:5000/dashboard"), ["None"])
+
+// const data = {"event": "historico", "data": [{"timestamp": "2025-06-04 16:44:06", "valor": 306}, {"timestamp": "2025-06-04 16:43:06", "valor": 306}, {"timestamp": "2025-06-04 16:42:05", "valor": 300}, {"timestamp": "2025-06-04 16:41:05", "valor": 275}, {"timestamp": "2025-06-04 16:40:05", "valor": 273}, {"timestamp": "2025-06-04 16:39:05", "valor": 271}, {"timestamp": "2025-06-04 16:38:05", "valor": 291}, {"timestamp": "2025-06-04 16:37:05", "valor": 293}, {"timestamp": "2025-06-04 16:36:04", "valor": 288}, {"timestamp": "2025-06-04 16:35:04", "valor": 304}, {"timestamp": "2025-06-04 16:34:04", "valor": 295}, {"timestamp": "2025-06-04 16:33:04", "valor": 289}, {"timestamp": "2025-06-04 16:32:04", "valor": 305}, {"timestamp": "2025-06-04 16:31:03", "valor": 327}, {"timestamp": "2025-06-04 16:30:03", "valor": 322}, {"timestamp": "2025-06-04 16:29:03", "valor": 320}, {"timestamp": "2025-06-04 16:28:03", "valor": 304}, {"timestamp": "2025-06-04 16:27:03", "valor": 336}, {"timestamp": "2025-06-04 16:26:02", "valor": 360}, {"timestamp": "2025-06-04 16:25:02", "valor": 383}, {"timestamp": "2025-06-04 16:24:02", "valor": 431}, {"timestamp": "2025-06-04 16:22:38", "valor": 669}, {"timestamp": "2025-06-04 16:21:38", "valor": 547}, {"timestamp": "2025-06-04 16:20:38", "valor": 554}, {"timestamp": "2025-06-04 16:19:38", "valor": 526}, {"timestamp": "2025-06-04 16:18:37", "valor": 495}, {"timestamp": "2025-06-04 16:17:37", "valor": 534}]}
+---
+
+<Layout tittle="Dashboard">
+	<aside class="[grid-area:aside] flex flex-col gap-2 p-2">
+		<Section>
+			<a href="">
+				Inicio
+			</a>
+			<a href="">
+				Buscar
+			</a>
+		</Section>
+		<Section styling='h-full px-2'>
+			<ul>
+				<li>Listas</li>
+				<li>Albums</li>
+				<li>Playlist</li>
+			</ul>
+			<div>
+
+				<input type="search"/>
+				<button>
+					Recientes
+				</button>
+			</div>
+			<div>
+				<h1>Cancion 1</h1>
+			</div>
+			<div>
+				<h1>Cancion 2</h1>
+			</div>
+			<div>
+				<h1>Cancion 3</h1>
+			</div>
+			<div>
+				<h1>Cancion 4</h1>
+			</div>
+			<div>
+				<h1>Cancion 5</h1>
+			</div>
+
+		</Section>
+	</aside>
+	<main class="[grid-area:main] pr-2 py-2 overflow-y-auto">
+		<div class="relative h-full w-full bg-[#2b2b2b] rounded-md overflow-y-hidden">
+			<DashboardClient client:load/>
+		</div>
+	</main>
+	<footer class="[grid-area:player] px-2 content-center">
+		<div class="w-full min-h-16 bg-[#2b2b2b] rounded-md text-center content-center self">
+			<h5>Derechos Reservados a Sebaxsus 2025</h5>
+		</div>
+	</footer>
+</Layout>
+
+<style>
+
+</style>

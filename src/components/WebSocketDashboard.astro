@@ -1,0 +1,63 @@
+---
+
+---
+
+<script>
+
+  const container = document.querySelector("#data-container");
+
+  const socket = new WebSocket("ws://127.0.0.1:5000/dashboard", "arduino");
+
+  socket.addEventListener("open", () => {
+    console.log("🟢 Conectado al WebSocket");
+  });
+
+  socket.addEventListener("message", (event) => {
+    try {
+        console.log("Recibiendo nuevos datos: ", JSON.parse(event.data))
+        const rawData = JSON.parse(event.data);
+
+        rawData.data.map((data) => {
+
+            if (!data.timestamp) {
+                // Si el server no manda timestamp, creamos uno
+                data.timestamp = new Date().toISOString();
+            }
+    
+            const item = document.createElement("div");
+            item.className = "flex justify-between p-2 border-b border-gray-300";
+    
+            const time = document.createElement("span");
+            time.textContent = new Date(data.timestamp).toLocaleString();
+            time.className = "font-mono text-sm";
+    
+            const value = document.createElement("span");
+            value.textContent = data.valor ?? "-";
+            value.className = "font-bold";
+    
+            item.appendChild(time);
+            item.appendChild(value);
+    
+            // Agregar al inicio (último arriba)
+            container?.append(item);
+    
+            // Limita a 100 items
+            if (container.children.length > 100) {
+                container.removeChild(container.lastChild);
+            }
+        })
+
+    } catch (e) {
+      console.warn("❌ Error procesando mensaje:", e);
+    }
+  });
+</script>
+
+<h2 class="text-3xl text-center p-4 mb-2 border-b border-amber-50">Datos en tiempo real</h2>
+<div id="data-container" class="relative flex flex-col gap-2 min-h-56 h-full overflow-y-auto">
+    <div class="flex justify-between p-2 border-b border-gray-300 sticky top-0 backdrop-blur-md">
+        <span class="font-mono text-xl min-w-5 text-center lg:w-32">Hora</span>
+        <span class="font-bold text-xl">Valor</span>
+    </div>
+    <!-- Datos se insertan aquí dinámicamente -->
+</div>
