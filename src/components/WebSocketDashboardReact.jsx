@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 export default function DashboardClient() {
     
     function nivelDeGravedad(valor) {
-        console.log("Valor: ", valor)
         if (valor <= 300) {
             return "light-dark(#0d611b, #1ac228)"
         }
@@ -32,11 +31,8 @@ export default function DashboardClient() {
                 if (raw.event === "historico") {
                     setData([...newData])
                 } else {
-                    setData((prev) => [JSON.parse(newData), ...prev]) 
+                    setData((prev) => [JSON.parse(newData), ...prev])
                 }
-                const firsItemValue = data[0].valor
-
-                nivelDeGravedad(firsItemValue)
                 
             } catch (e) {
                 console.error("Error al parsear JSON", e)
@@ -55,14 +51,34 @@ export default function DashboardClient() {
             <h2 className="text-3xl text-center p-4 mb-2 border-b border-amber-50">📊 Datos en tiempo real</h2>
             <div className="relative flex flex-col min-h-56 h-full overflow-y-auto" id="Sensor-Data-List">
                 <div className="flex justify-between p-2 border-b border-gray-300 sticky top-0 backdrop-blur-md z-[1]">
-                    <span className="font-mono text-xl min-w-5 text-center lg:w-32 lg:h-12">Hora</span>
-                    <span className="font-bold text-xl">Medida CH4</span>
+                    <div key={"data-List-Title-1"} className="flex flex-col justify-center items-center lg:px-12">
+                        <span className="font-mono text-xl text-center">Hora</span>
+                        <div className="bg-[var(--colour-txt)] size-5 arrow"></div>
+                    </div>
+                    <div key={"data-List-Title-2"} className="flex flex-col justify-center items-center">
+                        <span className="font-bold text-xl">Medida CH4</span>
+                        <div className="bg-[var(--colour-txt)] size-5 arrow"></div>
+                    </div>
                 </div>
                 {
-                    data.map((item, index) => (
+                    data.map((item, index) => {
+                        index === 0 ? document.documentElement.style.setProperty("--data-color", nivelDeGravedad(item.valor)) : null
+                        /*
+                        Si en algun momento alguien ve esto y se pregunta
+                        Por que está esto aqui:
+                            Porque la piche animacion no se vuelve a activar (Trigger) si no le quito
+                            la clase y espero cierto tiempo, (No se cual es el minimo pero en 200ms sirve 👍)
+                        */
+                        if (document.getElementById("first-Data") && index === 1) {
+                            document.getElementById("first-Data").classList.remove("fade-in")
+                            setTimeout(() => {
+                                document.getElementById("first-Data").classList.add("fade-in")
+                            }, 200)
+                        }
+
+                        return (
                         <>
-                            {index == 0 ? document.documentElement.style.setProperty("--data-color", nivelDeGravedad(item.valor)) : null}
-                            <div key={index} className={`flex py-2 px-4 border-b border-gray-300 lg:h-12 justify-between hover:opacity-70 cursor-default ${index == 0 ? "fade-in" : ""}`} style={{color: nivelDeGravedad(item.valor)}}>
+                            <div key={`data-${index}`} className={`flex py-2 px-4 border-b border-gray-300 lg:h-12 justify-between hover:opacity-70 cursor-default ${index == 0 ? "fade-in" : ""}`} style={{color: nivelDeGravedad(item.valor)}} id={index == 0 ? "first-Data" : ""}>
                                 <span className="font-mono">{item.timestamp}</span>
                                 <section className="font-mono flex gap-2 items-center">
                                     {item.valor} ppm
@@ -77,8 +93,9 @@ export default function DashboardClient() {
                                     />
                                 </section>
                             </div>
-                            </>
-                    )
+                        </>
+                        )
+                    }
                     )
                 }
             </div>

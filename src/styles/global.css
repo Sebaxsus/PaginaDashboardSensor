@@ -52,9 +52,20 @@
 }
 
 .fade-in {
-  animation: fadeIn 800ms ease-in-out normal;
+  animation: fadeIn 800ms ease-in-out;
   color: var(--data-color);
+  /* Aqui necesitor definir los colores ya que son una opacidad diferente 👍 */
   background-color: light-dark(#f5f5dc9a, #4a5349);
+}
+
+.arrow {
+    clip-path: path("M 0 0 L 10 10 L 20 0 L 0 0");
+}
+
+a:hover {
+    color: oklch(70.7% 0.165 254.624);
+    text-decoration-line: underline;
+    text-underline-offset: 4px;
 }
 
 @keyframes fadeIn {

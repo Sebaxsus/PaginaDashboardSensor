@@ -15,43 +15,21 @@ import DashboardClient from '../components/WebSocketDashboardReact';
 
 <Layout tittle="Dashboard">
 	<aside class="[grid-area:aside] flex flex-col gap-2 p-2">
-		<Section>
-			<a href="">
+		<Section styling='justify-between px-5'>
+			<a href="/">
 				Inicio
 			</a>
-			<a href="">
-				Buscar
+			<a href="https://github.com/Sebaxsus" referrerpolicy="no-referrer" target="_blank">
+				GitHub
 			</a>
 		</Section>
-		<Section styling='h-full px-2'>
-			<ul>
-				<li>Listas</li>
-				<li>Albums</li>
-				<li>Playlist</li>
-			</ul>
-			<div>
-
-				<input type="search"/>
-				<button>
-					Recientes
+		<Section styling='h-full px-2 flex-col'>
+			<div class="border rounded-2xl py-1 mx-2 relative items-center">
+				<input type="datetime-local" class="border-r px-2"/>
+				<button class="text-center absolute right-2 px-2 cursor-pointer hover:scale-105 hover:text-blue-400/75 hover:underline underline-offset-4">
+					Filtrar
 				</button>
 			</div>
-			<div>
-				<h1>Cancion 1</h1>
-			</div>
-			<div>
-				<h1>Cancion 2</h1>
-			</div>
-			<div>
-				<h1>Cancion 3</h1>
-			</div>
-			<div>
-				<h1>Cancion 4</h1>
-			</div>
-			<div>
-				<h1>Cancion 5</h1>
-			</div>
-
 		</Section>
 	</aside>
 	<main class="[grid-area:main] pr-2 py-2 overflow-y-auto">
