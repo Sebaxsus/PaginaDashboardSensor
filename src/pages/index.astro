@@ -15,7 +15,7 @@ import DashboardClient from '../components/WebSocketDashboardReact';
 
 <Layout tittle="Dashboard">
 	<aside class="[grid-area:aside] flex flex-col gap-2 p-2">
-		<Section styling='justify-between px-5'>
+		<Section styling='justify-around px-5'>
 			<a href="/">
 				Inicio
 			</a>
@@ -25,8 +25,8 @@ import DashboardClient from '../components/WebSocketDashboardReact';
 		</Section>
 		<Section styling='h-full px-2 flex-col'>
 			<div class="border rounded-2xl py-1 mx-2 relative items-center">
-				<input type="datetime-local" class="border-r px-2"/>
-				<button class="text-center absolute right-2 px-2 cursor-pointer hover:scale-105 hover:text-blue-400/75 hover:underline underline-offset-4">
+				<input type="datetime-local" class="border-r px-2" id="filter_data"/>
+				<button class="text-center absolute right-2 px-2 cursor-pointer hover:scale-105 hover:text-blue-400/75 hover:underline underline-offset-4" id="filter_button">
 					Filtrar
 				</button>
 			</div>
@@ -34,7 +34,13 @@ import DashboardClient from '../components/WebSocketDashboardReact';
 	</aside>
 	<main class="[grid-area:main] pr-2 py-2 overflow-y-auto">
 		<div class="relative h-full w-full bg-[#2b2b2b] rounded-md overflow-y-hidden">
-			<DashboardClient client:load/>
+			<!-- 
+			Originalmente era client:Load, Pero esto genera problemas con la API del Navegador document o Cualquier API en General
+			, Por eso se cambio a client:only para que se ejecute en el cliente exclusiva mentes y no de errores
+
+			See https://docs.astro.build/en/guides/troubleshooting/#document-or-window-is-not-defined for more information.
+			-->
+			<DashboardClient client:only/>
 		</div>
 	</main>
 	<footer class="[grid-area:player] px-2 content-center">

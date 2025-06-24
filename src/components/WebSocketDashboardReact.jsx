@@ -1,7 +1,38 @@
-import { useEffect, useState } from "react";
-
+import { useEffect, useState, useCallback, useRef } from "react";
 
 export default function DashboardClient() {
+
+    const [data, setData] = useState([])
+    const [timestampDirection, setTimestampDirection] = useState(true)
+    const [valueDirection, setValueDirection] = useState(true)
+
+    const socketRef = useRef(null)
+
+    document.getElementById("filter_button").onclick = (event) => {
+        const filterValue = document.getElementById("filter_data").value
+        // console.log(`Click en el Filtro ${filterValue.split("T")[0]}`)
+        if (!socketRef.current || socketRef.current.readyState !== WebSocket.OPEN) {
+            console.warn("Aun no se ha establecido la conexion al Servidor WebSocket")
+            return
+        }
+        // Aqui como el filtro actualmente solo usa fechas
+        // El orden estara definido por el estado Guardado
+        // en timestampDirection
+        const body = JSON.stringify({
+            "event":"historico",
+            "filter": {
+                "date": filterValue.split("T")[0]
+            },
+            "order":{
+                "by": "timestamp",
+                "direction": timestampDirection == true ? "DESC" : "ASC"
+            }
+        })
+
+        socketRef.current.send(body)
+    }
+
+    
     
     function nivelDeGravedad(valor) {
         if (valor <= 300) {
@@ -13,16 +44,18 @@ export default function DashboardClient() {
             return "light-dark(#740000, #ff0000)"
         }
     }
-    const [data, setData] = useState([])
 
     useEffect(() => {
         const socket = new WebSocket("ws://127.0.0.1:5000/dashboard", "arduino")
+
+        socketRef.current = socket
 
         socket.onopen = () => {
             console.log("🔌 Conectado al WebSocket")
         }
 
         socket.onmessage = (event) => {
+            console.log(timestampDirection, valueDirection)
             try {
                 const raw = JSON.parse(event.data)
                 const newData = raw.data
@@ -46,18 +79,49 @@ export default function DashboardClient() {
         return () => socket.close()
     }, [])
 
+    function orderBy(column, direction) {
+        
+        if (!socketRef.current || socketRef.current.readyState !== WebSocket.OPEN) {
+            console.warn("Aun no se ha establecido la conexion al Servidor WebSocket")
+            return
+        }
+        console.log("Pre ",timestampDirection, valueDirection)
+        if (column === "timestamp") {
+            setTimestampDirection(!timestampDirection)
+            setValueDirection(true)
+        } else {
+            setValueDirection(!valueDirection)
+            setTimestampDirection(true)
+        }
+
+        console.log("Post ",timestampDirection, valueDirection)
+        
+        valueDirection ? document.getElementById("Arrow_Value").classList.remove("rotate-180") : document.getElementById("Arrow_Value").classList.add("rotate-180")
+        timestampDirection ? document.getElementById("Arrow_Time").classList.remove("rotate-180") : document.getElementById("Arrow_Time").classList.add("rotate-180")
+        
+        const body = JSON.stringify({
+            "event":"historico",
+            "order":{
+                "by": column,
+                "direction": direction == true ? "DESC" : "ASC"
+            }
+        })
+
+        socketRef.current.send(body)
+    }
+
     return (
         <>
             <h2 className="text-3xl text-center p-4 mb-2 border-b border-amber-50">📊 Datos en tiempo real</h2>
-            <div className="relative flex flex-col min-h-56 h-full overflow-y-auto" id="Sensor-Data-List">
+            <div className="relative flex flex-col min-h-56 h-full overflow-y-auto duration-150" id="Sensor-Data-List">
                 <div className="flex justify-between p-2 border-b border-gray-300 sticky top-0 backdrop-blur-md z-[1]">
-                    <div key={"data-List-Title-1"} className="flex flex-col justify-center items-center lg:px-12">
+                    <div key={"data-List-Title-1"} className="flex flex-col justify-center items-center lg:px-12 hover:rounded-md hover:backdrop-blur-lg hover:backdrop-brightness-105 hover:bg-cyan-900 cursor-pointer" onClick={() => {orderBy("timestamp", timestampDirection)}}>
                         <span className="font-mono text-xl text-center">Hora</span>
-                        <div className="bg-[var(--colour-txt)] size-5 arrow"></div>
+                        <div className="bg-[var(--colour-txt)] size-5 arrow duration-150" id="Arrow_Time"></div>
                     </div>
-                    <div key={"data-List-Title-2"} className="flex flex-col justify-center items-center">
+                    <div key={"data-List-Title-2"} className="flex flex-col justify-center items-center lg:px-12 hover:rounded-md hover:backdrop-blur-lg hover:backdrop-brightness-105 hover:bg-cyan-900 cursor-pointer" onClick={() => {orderBy("valor", valueDirection)}}>
                         <span className="font-bold text-xl">Medida CH4</span>
-                        <div className="bg-[var(--colour-txt)] size-5 arrow"></div>
+                        <div className="bg-[var(--colour-txt)] size-5 arrow duration-150" id="Arrow_Value"></div>
                     </div>
                 </div>
                 {
